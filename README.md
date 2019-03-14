@@ -1,2 +1,2 @@
-# rumblestone
-Redux esports voting system
+# Rumblestone Voting
+Redux Esports voting system
