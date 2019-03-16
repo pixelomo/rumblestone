@@ -3,15 +3,24 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Button from "../components/Button";
+import { setRegion } from "../actions/region";
 const regionList = ['Japan', 'Taiwan', 'Hong Kong', 'South East Asia']
 
-class Board extends React.Component {
+class Regions extends React.Component {
+
   constructor(props) {
     super(props);
+    this.state = {
+      disableRegions: 0
+    };
   }
 
   regionSelected(region){
-    console.log(region)
+    const { dispatch } = this.props;
+    if(this.props.region === ""){
+      dispatch(setRegion(region));
+      this.setState({disableRegions: 1})
+    }
   }
 
   renderButtons(){
@@ -19,7 +28,9 @@ class Board extends React.Component {
         <Button 
             key={region} 
             text={region}
-            onRegionSelected={() => this.regionSelected(region)} 
+            type="region"
+            onClick={() => this.regionSelected(region)} 
+            disableRegions={this.state.disableRegions}
         />
     ))
   }
@@ -33,23 +44,14 @@ class Board extends React.Component {
   }
 }
 
-const stateToProps = state => {
+function mapStateToProps(state) {
+  const region = state.region;
   return {
-    winner: state.winner,
-    player: state.player,
-    board: state.board,
-    score: state.score
+    region
   };
-};
+}
 
-Board.propTypes = {
-  winner: PropTypes.string,
-  player: PropTypes.string,
-  dispatch: PropTypes.func,
-  score: PropTypes.object,
-};
-
-export default connect(stateToProps)(Board);
+export default connect(mapStateToProps)(Regions);
 
 ////////////CSS/////////////
 const RegionsWrapper = styled.div`

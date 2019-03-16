@@ -1,60 +1,79 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { playersData } from "../components/playersData";
+// import { playersData } from "../playersData";
+import Login from "./Login";
+import Button from "../components/Button";
 import PropTypes from "prop-types";
-import Regions from './Regions'
+import Regions from "./Regions";
+import Players from "./Players";
+import { logoutUser } from "../actions/user";
+import { closeVoting } from "../actions/voting";
 
-class Board extends React.Component {
+class Panel extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      closeVoting: 'Close Voting'
+    }
   }
 
-  componentDidMount(){
-    // console.log(playersData);
+  logout(user) {
+    console.log(user + " logged out");
+    const { dispatch } = this.props;
+    dispatch(logoutUser());
+  }
+
+  closeVoting() {
+    this.setState({closeVoting: 'Voting Closed'})
+    const { dispatch } = this.props;
+    dispatch(closeVoting());
   }
 
   render() {
+    const { user } = this.props;
     return (
       <Wrapper>
-        <img src="http://cdn.dekki.com/uploads/tournaments/rumblestone/logo.png"/>
-        <h1>Vote for player's to represent your region</h1>
-        <p>Select your region to browse players.</p>
-        <p>NOTE: you may only vote for one region.</p>
-        <Regions/>
-        {/* <BoardContainer winner={winner !== ""}>{this.renderSlots()}</BoardContainer> */}
-        {/* <Score score={this.props.score} player={this.props.player}/> */}
+        <Login />
+        <img src="http://cdn.dekki.com/uploads/tournaments/rumblestone/logo.png" />
+        <Button type="logout" text="logout  " onClick={() => this.logout("user")} />
+        {user === "admin" ? (
+          <div className="inner-wrap">
+            <h1>Welcome Admin</h1>
+            <Button type="closeVoting" text={this.state.closeVoting} onClick={() => this.closeVoting()} />
+          </div>
+        ) : (
+          <div className="inner-wrap">
+            <h1>Vote for player's to represent your region</h1>
+            <p>Select your region to browse players.</p>
+            <p>NOTE: you may only vote for one region.</p>
+          </div>
+        )}
+        <Regions />
+        <Players />
       </Wrapper>
     );
   }
 }
 
-const stateToProps = state => {
+function mapStateToProps(state) {
+  const players = state.players.get("list");
+  const user = state.user.get("name");
   return {
-    winner: state.winner,
-    player: state.player,
-    board: state.board,
-    score: state.score
+    players,
+    user
   };
-};
+}
 
-Board.propTypes = {
-  winner: PropTypes.string,
-  player: PropTypes.string,
-  dispatch: PropTypes.func,
-  score: PropTypes.object,
-};
-
-export default connect(stateToProps)(Board);
+export default connect(mapStateToProps)(Panel);
 
 ////////////CSS/////////////
 const Wrapper = styled.div`
   position: relative;
-  /* @import url("https://fonts.googleapis.com/css?family=Pacifico"); */
-  font-family: sans-serif;
+  @import url("https://fonts.googleapis.com/css?family=Noto+Sans");
+  font-family: "Noto Sans", sans-serif;
   text-align: center;
-  width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding: 20px;
   background: rgb(35, 41, 47);
   color: #f2f2f2;
