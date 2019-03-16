@@ -32,7 +32,8 @@ function mapStateToProps(state) {
 }
 
 Login.propTypes = {
-  user: PropTypes.object,
+  dispatch: PropTypes.func,
+  loggedIn: PropTypes.bool
 };
 
 export default connect(mapStateToProps)(Login);
@@ -61,6 +62,9 @@ const Log = styled.div`
     top: 30vh;
     width: 250px;
     box-shadow: 4px 6px 12px 3px rgba(34, 34, 34, 0.6);
+    button{
+      pointer-events: ${props => (props.loggedIn ? "none" : "all")};
+    }
   }
   h2{margin-top: 0;}
 `;

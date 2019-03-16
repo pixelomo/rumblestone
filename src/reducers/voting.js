@@ -1,9 +1,9 @@
-import { SET_PLAYERS } from "../actions/players";
-import { fromJS, List } from "immutable";
+import { fromJS } from "immutable";
 
 const initialState = fromJS({
   votesCast: 0,
-  votingClosed: false
+  votingClosed: false,
+  maxVotes: false
 });
 
 const voting = (state = initialState, action) => {
@@ -12,12 +12,11 @@ const voting = (state = initialState, action) => {
       return state.set("votesCast", state.get("votesCast") + 1);
     case "CLOSE_VOTING":
       return state.set("votingClosed", true);
+    case "MAX_VOTES":
+      return state.set("maxVotes", true);
     default:
       return state;
   }
 };
 
 export default voting;
-
-// player.nickname
-// player.likes ++

@@ -1,38 +1,33 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 class Button extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedBackground: "",
-      selectedColor: ""
-    };
-  }
-
-  onClickButton(region){
-    this.setState({
-      selectedBackground: "rgb(255, 125, 8)",
-      selectedColor: '#fff',
-    });
-    this.props.onClick();
-  }
 
   render() {
-    const { type, text, disableRegions } = this.props;
+    const { type, text, reset, bg, color } = this.props;
     return (
       <ButtonComp 
         className={type} 
-        selectedBackground={this.state.selectedBackground} 
-        selectedColor={this.state.selectedColor} 
-        disableRegions={disableRegions} 
-        onClick={() => this.onClickButton()}
+        bg={bg} 
+        color={color} 
+        reset={reset}
+        onClick={() => this.props.onClick()}
       >
         {text}
       </ButtonComp>
     );
   }
 }
+
+Button.propTypes = {
+  type: PropTypes.string,
+  text: PropTypes.string,
+  bg: PropTypes.string,
+  color: PropTypes.string,
+  reset: PropTypes.bool,
+  onClick: PropTypes.func
+};
 
 export default Button;
 
@@ -46,9 +41,8 @@ const ButtonComp = styled.button`
   font-size: 12px;
   user-select: none;
   cursor: pointer;
-  pointer-events: ${props => (props.disableRegions > 0 ? 'none' : 'all')};
-  background-color: ${props => (props.selectedBackground > "" ? props.selectedBackground : 'rgb(216, 216, 216)')};
-  color: ${props => (props.selectedColor > "" ? props.selectedColor : 'rgb(35, 41, 47)')};
+  background-color: ${props => (props.reset ?  'rgb(216, 216, 216)' : props.bg ? props.bg : 'rgb(216, 216, 216)')};
+  color: ${props => (props.reset ? 'rgb(35, 41, 47)' : props.color ? props.color : 'rgb(35, 41, 47)')};
   transition: 0.3s ease-in-out;
   margin: 0 5px 0 20px;
   border-radius: 3px;

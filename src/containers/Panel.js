@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-// import { playersData } from "../playersData";
 import Login from "./Login";
 import Button from "../components/Button";
 import PropTypes from "prop-types";
@@ -18,8 +17,7 @@ class Panel extends React.Component {
     }
   }
 
-  logout(user) {
-    console.log(user + " logged out");
+  logout() {
     const { dispatch } = this.props;
     dispatch(logoutUser());
   }
@@ -31,37 +29,54 @@ class Panel extends React.Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, votingClosed } = this.props;
     return (
       <Wrapper>
         <Login />
-        <img src="http://cdn.dekki.com/uploads/tournaments/rumblestone/logo.png" />
-        <Button type="logout" text="logout  " onClick={() => this.logout("user")} />
+        <Button type="logout" text="logout" onClick={() => this.logout("user")} />
         {user === "admin" ? (
           <div className="inner-wrap">
             <h1>Welcome Admin</h1>
             <Button type="closeVoting" text={this.state.closeVoting} onClick={() => this.closeVoting()} />
           </div>
-        ) : (
-          <div className="inner-wrap">
-            <h1>Vote for player's to represent your region</h1>
-            <p>Select your region to browse players.</p>
-            <p>NOTE: you may only vote for one region.</p>
-          </div>
-        )}
+        ) : votingClosed ? (
+            <div className="inner-wrap">
+              <h1>Voting is now closed</h1>
+              <p>You can view the results of each region below.</p>
+            </div>
+          ) : (
+            <div className="inner-wrap">
+              <h1>Vote for players to represent your region</h1>
+              <p>Select your region to browse players.</p>
+              <p>NOTE: you may only vote for one region.</p>
+            </div>
+          )
+        }
         <Regions />
         <Players />
+        {votingClosed || user === "admin"  ? null : <h3>You have {3 - this.props.votesCast}/3 remaining votes</h3>}
       </Wrapper>
     );
   }
 }
 
+Panel.propTypes = {
+  user: PropTypes.string,
+  dispatch: PropTypes.func,
+  votingClosed: PropTypes.bool,
+  votesCast: PropTypes.number,
+};
+
 function mapStateToProps(state) {
   const players = state.players.get("list");
   const user = state.user.get("name");
+  const votesCast = state.voting.get('votesCast');
+  const votingClosed = state.voting.get('votingClosed');
   return {
     players,
-    user
+    user,
+    votesCast,
+    votingClosed
   };
 }
 

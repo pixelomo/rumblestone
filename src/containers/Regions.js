@@ -2,52 +2,61 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import Button from "../components/Button";
+import ButtonWrap from "../components/ButtonWrap";
 import { setRegion } from "../actions/region";
 const regionList = ['Japan', 'Taiwan', 'Hong Kong', 'South East Asia']
 
 class Regions extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      disableRegions: 0
-    };
-  }
-
   regionSelected(region){
     const { dispatch } = this.props;
-    if(this.props.region === ""){
+    if(this.props.region === "" || this.props.user === 'admin' || this.props.votingClosed){
       dispatch(setRegion(region));
-      this.setState({disableRegions: 1})
     }
   }
 
   renderButtons(){
-    return regionList.map( region => (
-        <Button 
-            key={region} 
-            text={region}
+    return regionList.map( r => (
+        <ButtonWrap 
+            key={r} 
+            text={r}
             type="region"
-            onClick={() => this.regionSelected(region)} 
-            disableRegions={this.state.disableRegions}
+            reset={this.props.reset}
+            onClick={() => this.regionSelected(r)} 
         />
     ))
   }
 
   render() {
     return (
-      <RegionsWrapper>
+      <RegionsWrapper disableRegions={this.props.disabled && this.props.user === 'user'} votingClosed={this.props.votingClosed}>
         {this.renderButtons()}
       </RegionsWrapper>
     );
   }
 }
 
+Regions.propTypes = {
+  disabled: PropTypes.number,
+  reset: PropTypes.bool,
+  user: PropTypes.string,
+  region: PropTypes.string,
+  dispatch: PropTypes.func,
+  votingClosed: PropTypes.bool,
+};
+
 function mapStateToProps(state) {
-  const region = state.region;
+  const region = state.region.get("name");
+  const user = state.user.get("name");
+  const reset = state.user.get("reset");
+  const disabled = state.region.get("disabled");
+  const votingClosed = state.voting.get('votingClosed');
   return {
-    region
+    region,
+    user,
+    reset,
+    disabled,
+    votingClosed
   };
 }
 
@@ -61,4 +70,5 @@ const RegionsWrapper = styled.div`
     width: 600px;
     padding: 10px;
     margin: 0 auto;
+    pointer-events: ${props => (props.votingClosed ? 'all' : props.disableRegions > 0 ? 'none' : 'all')};
 `;

@@ -1,12 +1,9 @@
-import {
-  SET_USER,
-  LOGOUT_USER,
-} from "../actions/user";
-import { fromJS, List } from "immutable";
+import { fromJS } from "immutable";
 
 const initialState = fromJS({
   name: '',
-  loggedIn: false
+  loggedIn: false,
+  reset: false
 });
 
 const user = (state = initialState, action) => {
@@ -14,7 +11,7 @@ const user = (state = initialState, action) => {
     case "SET_USER":
       return state.set("name", action.user).set("loggedIn", true)
     case "LOGOUT_USER":
-      return state.set("name", state.name).set("loggedIn", false)
+      return state.set("name", state.name).set("loggedIn", false).set("reset", true)
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import "../flags.css";
+import PropTypes from "prop-types";
 
 class Player extends React.Component {
 
@@ -12,18 +12,18 @@ class Player extends React.Component {
     };
   }
 
-  onClickPlayer(id, programId) {
-    if(this.props.votesCast < 3){
-      this.setState({selectedBorder: "5px solid rgb(255, 125, 8)",});
-      this.props.onClick();
+  onClickPlayer() {
+    if(this.props.votesCast < 3 && this.props.user === 'user'){
+      this.setState({selectedBorder: "5px solid rgb(255, 125, 8)"});
     }
+    this.props.onClick();
   }
 
   render() {
-    const { name, avatar, id, message, country, likes, votingClosed } = this.props;
+    const { name, avatar, user, message, country, percentage, votingClosed } = this.props;
     return (
-      <PlayerComponent onClick={() => this.onClickPlayer()} votingClosed={votingClosed} selectedBorder={this.state.selectedBorder}>
-        <span>{likes}</span>
+      <PlayerComponent onClick={() => this.onClickPlayer()} votingClosed={votingClosed} user={user} selectedBorder={this.state.selectedBorder}>
+        <span>{percentage}%</span>
         <img src={avatar} alt={name} />
         <h3>
           {name}
@@ -35,8 +35,20 @@ class Player extends React.Component {
   }
 }
 
+Player.propTypes = {
+  name: PropTypes.string,
+  avatar: PropTypes.string,
+  user: PropTypes.string,
+  onClick: PropTypes.func,
+  votesCast: PropTypes.number,
+  message: PropTypes.string,
+  country: PropTypes.string,
+  percentage: PropTypes.number,
+  votingClosed: PropTypes.bool,
+};
+
 export default Player;
-// onClick={this.props.onClick}
+
 ////////////////////////// CSS //////////////////////////
 const PlayerComponent = styled.div`
   display: inline-block;
@@ -46,6 +58,7 @@ const PlayerComponent = styled.div`
   margin: 10px;
   font-size: 12px;
   position: relative;
+  pointer-events: ${props => (props.selectedBorder > "" ? 'none' : 'all')};
   &:hover {
     cursor: pointer;
     img {
@@ -85,7 +98,7 @@ const PlayerComponent = styled.div`
     color: black;
     padding: 1px 5px;
     border-radius: 3px;
-    opacity: ${props => (props.votingClosed ? 1 : 0)};
+    opacity: ${props => (props.votingClosed || props.user === 'admin' ? 1 : 0)};
   }
   i {
     background-image: url("https://cdn.dekki.com/assets/images/famfamfam-flags.png");
