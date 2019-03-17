@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import ButtonWrap from "../components/ButtonWrap";
+import Button from "../components/Button";
 import { setRegion } from "../actions/region";
 const regionList = ['Japan', 'Taiwan', 'Hong Kong', 'South East Asia']
 
@@ -17,10 +17,11 @@ class Regions extends React.Component {
 
   renderButtons(){
     return regionList.map( r => (
-        <ButtonWrap 
+        <Button 
             key={r} 
             text={r}
             type="region"
+            selected={this.props.region === r}
             reset={this.props.reset}
             onClick={() => this.regionSelected(r)} 
         />

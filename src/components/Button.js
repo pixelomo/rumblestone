@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 class Button extends React.Component {
 
   render() {
-    const { type, text, reset, bg, color } = this.props;
+    const { type, text, reset, selected} = this.props;
     return (
       <ButtonComp 
         className={type} 
-        bg={bg} 
-        color={color} 
+        selected={selected} 
         reset={reset}
         onClick={() => this.props.onClick()}
       >
@@ -23,8 +22,7 @@ class Button extends React.Component {
 Button.propTypes = {
   type: PropTypes.string,
   text: PropTypes.string,
-  bg: PropTypes.string,
-  color: PropTypes.string,
+  selected: PropTypes.bool,
   reset: PropTypes.bool,
   onClick: PropTypes.func
 };
@@ -41,8 +39,8 @@ const ButtonComp = styled.button`
   font-size: 12px;
   user-select: none;
   cursor: pointer;
-  background-color: ${props => (props.reset ?  'rgb(216, 216, 216)' : props.bg ? props.bg : 'rgb(216, 216, 216)')};
-  color: ${props => (props.reset ? 'rgb(35, 41, 47)' : props.color ? props.color : 'rgb(35, 41, 47)')};
+  background-color: ${props => ( props.selected ? "rgb(255, 125, 8)" : 'rgb(216, 216, 216)')};
+  color: ${props => (props.selected ? '#fff' : 'rgb(35, 41, 47)')};
   transition: 0.3s ease-in-out;
   margin: 0 5px 0 20px;
   border-radius: 3px;
