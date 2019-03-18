@@ -8,7 +8,8 @@ class Player extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedBorder: ""
+      selectedBorder: "",
+      selected: ""
     };
   }
 
@@ -25,11 +26,13 @@ class Player extends React.Component {
       <PlayerComponent onClick={() => this.onClickPlayer()} votingClosed={votingClosed} user={user} selectedBorder={this.state.selectedBorder}>
         <span>{percentage}%</span>
         <img src={avatar} alt={name} />
+        <span className="selected">Selected</span>
         <h3>
           {name}
           <i className={"famfamfam-flag-" + country} />
         </h3>
         <p>{message}</p>
+
       </PlayerComponent>
     );
   }
@@ -58,7 +61,7 @@ const PlayerComponent = styled.div`
   margin: 10px;
   font-size: 12px;
   position: relative;
-  pointer-events: ${props => (props.selectedBorder > "" ? 'none' : 'all')};
+  pointer-events: ${props => (props.votingClosed ? 'none' : props.selectedBorder > "" ? 'none' : 'all')};
   &:hover {
     cursor: pointer;
     img {
@@ -99,6 +102,12 @@ const PlayerComponent = styled.div`
     padding: 1px 5px;
     border-radius: 3px;
     opacity: ${props => (props.votingClosed || props.user === 'admin' ? 1 : 0)};
+    &.selected{
+      margin: -20px auto 0;
+      opacity: ${props => (props.selectedBorder && props.user === 'user' ? 1 : 0)};
+      color: #fff;
+      background:rgba(255, 125, 8, 0.52);
+    }
   }
   i {
     background-image: url("https://cdn.dekki.com/assets/images/famfamfam-flags.png");

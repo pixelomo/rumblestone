@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 class Button extends React.Component {
 
   render() {
-    const { type, text, reset, selected} = this.props;
+    const { type, text, selected} = this.props;
     return (
       <ButtonComp 
         className={type} 
         selected={selected} 
-        reset={reset}
         onClick={() => this.props.onClick()}
       >
         {text}
@@ -23,7 +22,6 @@ Button.propTypes = {
   type: PropTypes.string,
   text: PropTypes.string,
   selected: PropTypes.bool,
-  reset: PropTypes.bool,
   onClick: PropTypes.func
 };
 

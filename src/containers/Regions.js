@@ -22,7 +22,6 @@ class Regions extends React.Component {
             text={r}
             type="region"
             selected={this.props.region === r}
-            reset={this.props.reset}
             onClick={() => this.regionSelected(r)} 
         />
     ))
@@ -39,7 +38,6 @@ class Regions extends React.Component {
 
 Regions.propTypes = {
   disabled: PropTypes.number,
-  reset: PropTypes.bool,
   user: PropTypes.string,
   region: PropTypes.string,
   dispatch: PropTypes.func,
@@ -49,13 +47,11 @@ Regions.propTypes = {
 function mapStateToProps(state) {
   const region = state.region.get("name");
   const user = state.user.get("name");
-  const reset = state.user.get("reset");
   const disabled = state.region.get("disabled");
   const votingClosed = state.voting.get('votingClosed');
   return {
     region,
     user,
-    reset,
     disabled,
     votingClosed
   };
